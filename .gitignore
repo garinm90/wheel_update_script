@@ -8,6 +8,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
 # C extensions
 *.so
 
@@ -126,6 +127,7 @@ env.bak/
 venv.bak/
 pip-selfcheck.json
 
+Sequences/
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json

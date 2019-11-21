@@ -3,6 +3,8 @@ import requests
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 cwd = os.getcwd()
+sequence_path = os.path.join(cwd, "Sequences")
+
 
 controller_addresses = {"controller_" +
                         str(i): "http://192.168.1."+str(i) for i in range(201, 204)}
@@ -55,17 +57,18 @@ def get_controller_e131(controller_number, form_e131_data):
     return form_e131_data
 
 
-files = open("orangewhite1f.fseq", "rb")
+for file in os.listdir(sequence_path):
+    upload_file = open(os.path.join(sequence_path, file), "rb")
+    print(f"Uploading {file} to controller please wait.....")
+    r = requests.post(
+        "http://fpp.local/api/sequence/" + file, data=upload_file)
+    print(f"Upload of {file} completed.")
 
 
-r = requests.post(
-    "http://fpp.local/api/sequence/orangewhite1f.fseq", data=files)
-
-
-for i, v in enumerate(controller_addresses.values()):
-    controller_number = i + 1
-    form_data = get_controller_e131(controller_number, form_e131_data)
-    r = requests.post(v + "/E131.htm", data=form_data)
-    form_data = get_controller_string_ports(
-        controller_number, form_string_ports)
-    r = requests.post(v + "/StringPorts.htm", data=form_data)
+# for i, v in enumerate(controller_addresses.values()):
+#     controller_number = i + 1
+#     form_data = get_controller_e131(controller_number, form_e131_data)
+#     r = requests.post(v + "/E131.htm", data=form_data)
+#     form_data = get_controller_string_ports(
+#         controller_number, form_string_ports)
+#     r = requests.post(v + "/StringPorts.htm", data=form_data)
