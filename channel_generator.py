@@ -2,9 +2,14 @@ import requests
 import json
 import pprint
 
-data = {"channelOutputs": [
+data = [("command", "setChannelOutputs")]
+
+
+channel_outputs = {"channelOutputs": [
     {"type": "universes", "enabled": 1, "startChannel": 1, "channelCount": -1, "universes": []}]}
 
+params = {"command": "setChannelOutputs",
+          "file": "universeOutputs", "data": ""}
 
 address = "192.168.1."
 controller_number = 1
@@ -21,7 +26,8 @@ for i in range(1, 109):
     elif (i % 3 == 1):
         controller_number += 1
         universe_info["address"] = address + str(200 + controller_number)
-    data["channelOutputs"][0]["universes"].append(universe_info.copy())
+    channel_outputs["channelOutputs"][0]["universes"].append(
+        universe_info.copy())
     start_channel += 510
 
 
@@ -31,7 +37,8 @@ for i in range(109, 119):
     universe_info["id"] = i
     universe_info["type"] = 0
     universe_info["address"] = ""
-    data["channelOutputs"][0]["universes"].append(universe_info.copy())
+    channel_outputs["channelOutputs"][0]["universes"].append(
+        universe_info.copy())
     start_channel += 510
     # print(universe_info)
 
@@ -48,9 +55,16 @@ for i in range(119, 227):
     elif ((i - 118) % 3 == 1):
         controller_number += 1
         universe_info["address"] = address + str(200 + controller_number)
-    data["channelOutputs"][0]["universes"].append(universe_info.copy())
+    channel_outputs["channelOutputs"][0]["universes"].append(
+        universe_info.copy())
     start_channel += 510
     universe_id += 1
 
-# pprint.pprint(data)
-r = requests.post("http://fpp.local/fppjson.php", json=data)
+
+print(channel_outputs)
+with open('data.txt', 'w') as outfile:
+    json.dump(channel_outputs, outfile)
+
+# r = requests.post("http://fpp.local/fppjson.php",
+#   params = params, json = json.dumps(channel_outputs))
+#
